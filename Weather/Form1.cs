@@ -16,5 +16,18 @@ namespace Weather
         {
             InitializeComponent();
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
+    public class Feature
+    {
+        public string Region { get; set; }
+        public string City { get; set; }
+        public string Center { get; set; }
+        public string Status { get; set; }
+        public string MaxDegree { get; set; }
     }
 }
