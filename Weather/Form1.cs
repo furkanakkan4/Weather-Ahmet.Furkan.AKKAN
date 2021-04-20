@@ -21,10 +21,19 @@ namespace Weather
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ReadXmlAndWriteText();
+            var weatherList = ReadXmlWriteText();
+            FillLabel(weatherList);
         }
 
-        private void ReadXmlAndWriteText()
+        private void FillLabel(List<Feature> weatherList)
+        {
+            lblCity.Text = weatherList[0].City;
+            lblDegree.Text = " ===> " + weatherList[0].MaxDegree + " Derece";
+            lblStatus.Text = weatherList[0].Status;
+            lblNotification.Text = DateTime.Now.ToLongTimeString() + "  Saatinde Bilgiler Güncellendi";
+        }
+
+        private static List<Feature> ReadXmlWriteText()
         {
             List<Feature> weatherList = new List<Feature>();
             XDocument xDocument = XDocument.Load("https://www.mgm.gov.tr/FTPDATA/analiz/sonSOA.xml");
@@ -37,30 +46,25 @@ namespace Weather
                     Status = (string) o.Element("Durum"),
                     MaxDegree = (string) o.Element("Mak"),
                 }).ToList();
-            TextWriter(weatherList);
-        }
 
-        private void TextWriter(List<Feature> weatherList)
-        {
             string save = weatherList[0].Region + " | " +
                           weatherList[0].City + " | " +
                           weatherList[0].Center + " | " +
                           weatherList[0].MaxDegree + "         | " +
                           weatherList[0].Status;
             string save2 = "Bolge      | Şehir         | Merkez      | Derece  | Durum\n";
-            label1.Text = save;
             TextWriter textWriter = new StreamWriter("Weather.text");
             textWriter.Write(save2 + save);
             textWriter.Close();
+            return weatherList;
         }
 
         private void tmrTime_Tick(object sender, EventArgs e)
         {
-            ReadXmlAndWriteText();
-            label1.Text +="güncellendi";
-
+            var weatherList = ReadXmlWriteText();
+            FillLabel(weatherList);
         }
-        
+
     }
 
     public class Feature
