@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace Weather
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
             List<Feature> weatherList = new List<Feature>();
             XDocument xDocument = XDocument.Load("https://www.mgm.gov.tr/FTPDATA/analiz/sonSOA.xml");
             weatherList = xDocument.Descendants("sehirler").Where(x => (string) x.Element("Merkez") == "İSTANBUL")
@@ -31,10 +33,20 @@ namespace Weather
                     Status = (string) o.Element("Durum"),
                     MaxDegree = (string) o.Element("Mak"),
                 }).ToList();
+            string save = weatherList[0].Region + " | " +
+                            weatherList[0].City + " | " +
+                            weatherList[0].Center + " | " +
+                            weatherList[0].MaxDegree + "         | " +
+                            weatherList[0].Status;
+            string save2 = "Bolge      | Şehir         | Merkez      | Derece  | Durum\n";
+            label1.Text = save;
+            TextWriter textWriter = new StreamWriter("Weather.text");
+            textWriter.Write(save2+save);
+            textWriter.Close();
             
-            label1.Text = weatherList[0].MaxDegree;
         }
     }
+
     public class Feature
     {
         public string Region { get; set; }
